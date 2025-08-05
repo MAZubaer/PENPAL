@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-# Laravel eCommerce Stationary Store
+# PENPAL Stationary Store
 
 This project is a Laravel-based eCommerce platform for stationary items. It uses Blade for templating and PHP Laravel for backend logic.
 
