@@ -87,7 +87,7 @@
 <div class="container text-center">
     <h1 class="fun-title">Welcome to PENPAL!</h1>
     <div class="mb-3">
-        <img src="/build/assets/logo.png" alt="PENPAL Logo" style="height:300px;width:300px;object-fit:contain;display:inline-block;box-shadow:0 2px 8px #b2d7e644;border-radius:12px;background:#fff;" onerror="this.style.display='none'">
+        <img src="{{ asset('images/logo.png') }}" alt="PENPAL Logo" style="height:300px;width:300px;object-fit:contain;display:inline-block;box-shadow:0 2px 8px #b2d7e644;border-radius:12px;background:#fff;" onerror="this.style.display='none'">
     </div>
     <p class="fun-desc">The coolest place to shop pens, notebooks, art supplies, and more!</p>
     <div class="mb-4">

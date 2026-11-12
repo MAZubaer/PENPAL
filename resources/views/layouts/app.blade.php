@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/build/assets/logo.png">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <title>@yield('title', config('app.name', 'PENPAL'))</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Baloo+2:700|Comic+Sans+MS:400,700" rel="stylesheet">
@@ -99,12 +99,12 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-custom">
       <video autoplay loop muted playsinline style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;z-index:0;">
-        <source src="/build/assets/Blue_navbarbg.mp4" type="video/mp4">
+        <source src="{{ asset('videos/Blue_navbarbg.mp4') }}" type="video/mp4">
       </video>
       <div class="container position-relative" style="z-index:2;background:#e3f6fd !important;border-radius:16px;box-shadow:0 2px 8px #b2d7e644;">
         <a class="navbar-brand d-flex align-items-center gap-3" href="/" style="height:172px;position:relative;z-index:2;">
             <span style="display:flex;align-items:center;justify-content:center;height:172px;width:172px;background:rgba(255,255,255,0.35);border-radius:8px;box-shadow:0 2px 8px #b2d7e644;overflow:hidden;backdrop-filter:blur(8px) saturate(120%);">
-                <img src="/build/assets/logo.png" alt="PENPAL Logo" style="height:172px;width:172px;object-fit:contain;display:block;" onerror="this.style.display='none'">
+                <img src="{{ asset('images/logo.png') }}" alt="PENPAL Logo" style="height:172px;width:172px;object-fit:contain;display:block;" onerror="this.style.display='none'">
             </span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
