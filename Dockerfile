@@ -14,10 +14,10 @@ RUN npm run build
 FROM php:8.2-apache-bookworm
 
 # System libs + PHP extensions (mbstring, curl, openssl, fileinfo, etc. ship with the base image)
+# (no zip extension: the app doesn't need it, and Composer uses the unzip binary)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libpq-dev libzip-dev unzip \
-    && docker-php-ext-install -j"$(nproc)" pdo_pgsql opcache bcmath zip \
-    && apt-get purge -y --auto-remove libzip-dev \
+    && apt-get install -y --no-install-recommends libpq-dev unzip \
+    && docker-php-ext-install -j"$(nproc)" pdo_pgsql opcache bcmath \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP production settings + Apache vhost that serves /public on $PORT

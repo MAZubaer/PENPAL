@@ -14,6 +14,18 @@ if [ -z "${APP_KEY:-}" ]; then
     exit 1
 fi
 
+# Catch swapped/mis-pasted secrets early, without ever printing their values.
+case "${DATABASE_URL:-}" in
+    postgres://*|postgresql://*) ;;
+    "") echo "FATAL: DATABASE_URL is not set (expected your Neon postgresql://... URL)." >&2; exit 1 ;;
+    *) echo "FATAL: DATABASE_URL must start with postgresql:// (it starts with '${DATABASE_URL%%://*}://'). Check it isn't the Cloudinary URL." >&2; exit 1 ;;
+esac
+case "${CLOUDINARY_URL:-}" in
+    cloudinary://*) ;;
+    "") echo "WARNING: CLOUDINARY_URL is not set; product image uploads will fail." >&2 ;;
+    *) echo "FATAL: CLOUDINARY_URL must start with cloudinary:// (it starts with '${CLOUDINARY_URL%%://*}://')." >&2; exit 1 ;;
+esac
+
 # Cache config/routes/views/events with the runtime environment variables.
 php artisan optimize
 
