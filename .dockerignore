@@ -1,0 +1,11 @@
+node_modules
+vendor
+storage
+.env
+.env.*
+.git
+.gitignore
+npm-debug.log
+.DS_Store
+phpunit.xml
+/tests

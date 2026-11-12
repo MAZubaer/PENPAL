@@ -7,8 +7,8 @@
     <title>@yield('title', config('app.name', 'PENPAL'))</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Baloo+2:700|Comic+Sans+MS:400,700" rel="stylesheet">
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Vite Assets -->
+    @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
     <style>
         body {
             background: linear-gradient(135deg, #f7fafc 0%, #e3f6fd 100%);

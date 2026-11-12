@@ -16,8 +16,9 @@ class ProductController extends Controller
         if (request('search')) {
             $search = request('search');
             $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                  ->orWhere('description', 'like', "%$search%");
+                // whereLike: case-insensitive on both SQLite (like) and PostgreSQL (ilike)
+                $q->whereLike('name', "%$search%")
+                  ->orWhereLike('description', "%$search%");
             });
         }
 

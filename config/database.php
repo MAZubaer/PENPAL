@@ -2,6 +2,24 @@
 
 use Illuminate\Support\Str;
 
+/*
+| Neon routes connections by SNI. libpq < 14 (e.g. XAMPP's PHP on Windows)
+| can't send it, so when DB_NEON_ENDPOINT_IN_PASSWORD=true we pass the
+| endpoint ID inside the password instead ("endpoint=<id>;<password>").
+| Leave it unset in production (Render's Docker image has a modern libpq).
+*/
+$pgsqlUrl = env('DATABASE_URL', env('DB_URL'));
+
+if ($pgsqlUrl && env('DB_NEON_ENDPOINT_IN_PASSWORD', false)) {
+    $parts = parse_url($pgsqlUrl);
+
+    if (isset($parts['host'], $parts['pass']) && ! str_starts_with(rawurldecode($parts['pass']), 'endpoint=')) {
+        $endpoint = explode('.', $parts['host'])[0];
+        $password = rawurlencode('endpoint='.$endpoint.';'.rawurldecode($parts['pass']));
+        $pgsqlUrl = preg_replace('#^([a-z]+://[^:/@]+:)[^@]*@#i', '${1}'.$password.'@', $pgsqlUrl, 1);
+    }
+}
+
 return [
 
     /*
@@ -84,7 +102,7 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DB_URL'),
+            'url' => $pgsqlUrl,
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'laravel'),
@@ -94,7 +112,13 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => env('DB_SSLMODE', 'require'),
+            // Neon's "-pooler" endpoint is PgBouncer. PHP's named prepared statements
+            // break there (its SQL DEALLOCATE fails and aborts the transaction), so send
+            // each query as an unnamed statement instead. Parameters stay server-side.
+            'options' => extension_loaded('pdo_pgsql') ? [
+                PDO::PGSQL_ATTR_DISABLE_PREPARES => (bool) env('DB_DISABLE_PREPARES', true),
+            ] : [],
         ],
 
         'sqlsrv' => [
