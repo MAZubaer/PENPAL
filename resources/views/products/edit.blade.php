@@ -26,7 +26,7 @@
             <label>Image</label>
             <input type="file" name="image" class="form-control" accept="image/*">
             @if($product->image)
-                <img src="{{ asset('storage/'.$product->image) }}" alt="Product Image" class="img-fluid mt-2" style="max-height:120px;">
+                <img src="{{ $product->image_url }}" alt="Product Image" class="img-fluid mt-2" style="max-height:120px;">
             @endif
         </div>
         <div class="mb-3">

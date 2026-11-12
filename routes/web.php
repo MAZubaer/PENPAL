@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BookmarkController;
 
-// Coupon management (admin only, controlled by Blade UI)
-Route::middleware('auth')->group(function () {
+// Coupon management (admin only)
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('coupons', [App\Http\Controllers\CouponController::class, 'index'])->name('coupons.index');
     Route::get('coupons/create', [App\Http\Controllers\CouponController::class, 'create'])->name('coupons.create');
     Route::post('coupons', [App\Http\Controllers\CouponController::class, 'store'])->name('coupons.store');
@@ -42,7 +42,7 @@ Route::post('cart/remove/{product}', [App\Http\Controllers\CartController::class
 Route::get('order/input', [OrderController::class, 'input'])->name('order.input');
 Route::post('order', [OrderController::class, 'store'])->name('order.store');
 Route::get('orders/confirmation/{id}', [OrderController::class, 'confirmation'])->name('orders.confirmation');
-Route::get('admin/orders', [OrderController::class, 'adminOrders'])->middleware('auth')->name('orders.admin');
+Route::get('admin/orders', [OrderController::class, 'adminOrders'])->middleware(['auth', 'admin'])->name('orders.admin');
 Route::get('orders/user', [OrderController::class, 'userOrders'])->middleware('auth')->name('orders.user');
 Route::post('orders/cancel/{id}', [OrderController::class, 'cancel'])->middleware('auth')->name('orders.cancel');
-Route::post('admin/orders/process/{id}', [OrderController::class, 'process'])->middleware('auth')->name('orders.process');
+Route::post('admin/orders/process/{id}', [OrderController::class, 'process'])->middleware(['auth', 'admin'])->name('orders.process');

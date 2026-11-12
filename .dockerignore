@@ -1,11 +1,37 @@
-node_modules
-vendor
-storage
+# VCS / editor
+.git
+.github
+.vscode
+.idea
+.vercel
+
+# Secrets and local-only files: never bake these into the image
 .env
 .env.*
-.git
-.gitignore
+database/*.sqlite
+database/*.sqlite*
+
+# Rebuilt inside the image
+node_modules
+vendor
+public/build
+public/hot
+public/storage
+bootstrap/cache/*.php
+
+# Runtime state (directories are recreated by the Dockerfile)
+storage
+
+# Not needed in production
+tests
+phpunit.xml
+*.log
 npm-debug.log
 .DS_Store
-phpunit.xml
-/tests
+Thumbs.db
+
+# Other hosting targets (Render uses Dockerfile + render.yaml)
+api
+vercel.json
+.vercelignore
+fly.toml

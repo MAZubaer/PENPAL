@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -61,7 +63,7 @@ class ProductController extends Controller
             'image' => 'nullable|image|max:2048',
         ]);
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $data['image'] = $this->storeImage($request->file('image'));
         }
         Product::create($data);
         return redirect()->route('products.index');
@@ -95,7 +97,7 @@ class ProductController extends Controller
             'image' => 'nullable|image|max:2048',
         ]);
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $data['image'] = $this->storeImage($request->file('image'));
         }
         $product->update($data);
         return redirect()->route('products.index');
@@ -115,5 +117,19 @@ class ProductController extends Controller
         }
         $product->delete();
         return redirect()->route('products.index');
+    }
+
+    /**
+     * Upload a product image to the Cloudinary disk and return its public URL.
+     * The full secure URL is stored in products.image so pages render without
+     * calling Cloudinary's rate-limited Admin API on every view.
+     */
+    private function storeImage(UploadedFile $file): string
+    {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('cloudinary');
+        $path = $file->store('products', 'cloudinary');
+
+        return $disk->url($path);
     }
 }

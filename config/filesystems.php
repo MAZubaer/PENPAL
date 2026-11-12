@@ -47,6 +47,15 @@ return [
             'report' => false,
         ],
 
+        // Product images (cloudinary-labs/cloudinary-laravel). Render's filesystem is
+        // ephemeral, so uploads must live off-box. CLOUDINARY_URL = cloudinary://key:secret@cloud
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+            'url' => env('CLOUDINARY_URL'),
+            'secure' => true,
+            'throw' => true,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

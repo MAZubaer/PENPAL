@@ -7,7 +7,7 @@
         <div class="row g-0 align-items-center">
           <div class="col-md-6 text-center">
             @if($product->image)
-              <img src="{{ asset('storage/'.$product->image) }}" alt="Product Image" class="img-fluid mb-3" style="max-height:320px; border-radius:24px; box-shadow:0 4px 24px #b2d7e6;">
+              <img src="{{ $product->image_url }}" alt="Product Image" class="img-fluid mb-3" style="max-height:320px; border-radius:24px; box-shadow:0 4px 24px #b2d7e6;">
             @else
               <div class="bg-light d-flex align-items-center justify-content-center" style="height:320px; border-radius:24px;">
                 <span class="text-muted">No Image</span>

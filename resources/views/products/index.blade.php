@@ -37,7 +37,7 @@
             <select name="category" id="category" class="form-select">
                 <option value="">All Categories</option>
                 @foreach(App\Models\Category::all() as $cat)
-                    <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    <option value="{{ $cat->id }}" {{ request()->query('category') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -57,7 +57,7 @@
                     <div class="card-body d-flex flex-column" style="height: 100%;">
                         <h5 class="card-title">{{ $product->name }}</h5>
                         @if($product->image)
-                            <img src="{{ asset('storage/'.$product->image) }}" alt="Product Image" class="img-fluid mb-2" style="height:180px;width:180px;object-fit:cover;border-radius:12px;background:#fff;box-shadow:0 2px 8px #b2d7e644;">
+                            <img src="{{ $product->image_url }}" alt="Product Image" class="img-fluid mb-2" style="height:180px;width:180px;object-fit:cover;border-radius:12px;background:#fff;box-shadow:0 2px 8px #b2d7e644;">
                         @endif
                         <p class="card-text text-truncate" style="max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $product->description }}</p>
                         <p class="card-text">Price: ৳{{ $product->price }}</p>

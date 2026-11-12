@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $bookmark->product->name }}</h5>
                             @if($bookmark->product->image)
-                                <img src="{{ asset('storage/'.$bookmark->product->image) }}" alt="Product Image" class="img-fluid mb-2" style="max-height:120px;">
+                                <img src="{{ $bookmark->product->image_url }}" alt="Product Image" class="img-fluid mb-2" style="max-height:120px;">
                             @endif
                             <p class="card-text">{{ $bookmark->product->description }}</p>
                             <p class="card-text">Price: ৳{{ $bookmark->product->price }}</p>
