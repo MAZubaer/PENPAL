@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,7 +24,9 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use RegistersUsers {
+        register as traitRegister;
+    }
 
     /**
      * Where to redirect users after registration.
@@ -53,6 +58,22 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+    }
+
+    /**
+     * Same as the RegistersUsers trait, but a duplicate email that slips past the
+     * unique validation (e.g. a double-clicked submit racing itself) returns a normal
+     * validation error instead of a 500.
+     */
+    public function register(Request $request)
+    {
+        try {
+            return $this->traitRegister($request);
+        } catch (UniqueConstraintViolationException $e) {
+            throw ValidationException::withMessages([
+                'email' => 'This email is already registered. Please log in.',
+            ]);
+        }
     }
 
     /**

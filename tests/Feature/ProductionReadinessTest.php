@@ -85,6 +85,54 @@ class ProductionReadinessTest extends TestCase
         $this->assertNull($none->image_url);
     }
 
+    private function registration(string $email): array
+    {
+        return [
+            'name' => 'New Customer',
+            'email' => $email,
+            'password' => 'secret-pass-123',
+            'password_confirmation' => 'secret-pass-123',
+        ];
+    }
+
+    public function test_registration_creates_and_logs_in_user(): void
+    {
+        $this->post('/register', $this->registration('new@example.com'))->assertRedirect('/home');
+
+        $this->assertAuthenticated();
+        $this->assertDatabaseHas('users', ['email' => 'new@example.com']);
+        $this->get('/home')->assertOk();
+    }
+
+    public function test_registering_an_existing_email_shows_a_validation_error(): void
+    {
+        User::factory()->create(['email' => 'taken@example.com']);
+
+        $this->from('/register')->post('/register', $this->registration('taken@example.com'))
+            ->assertRedirect('/register')
+            ->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
+
+    public function test_double_submit_race_returns_validation_error_not_500(): void
+    {
+        // Simulate the second of two simultaneous requests: validation already passed,
+        // then the first request's insert lands just before ours.
+        User::creating(function (User $user) {
+            if ($user->email === 'race@example.com' && ! User::where('email', 'race@example.com')->exists()) {
+                \DB::table('users')->insert([
+                    'name' => 'First request', 'email' => 'race@example.com',
+                    'password' => 'x', 'role' => 'user', 'created_at' => now(), 'updated_at' => now(),
+                ]);
+            }
+        });
+
+        $this->from('/register')->post('/register', $this->registration('race@example.com'))
+            ->assertRedirect('/register')
+            ->assertSessionHasErrors(['email' => 'This email is already registered. Please log in.']);
+        $this->assertSame(1, User::where('email', 'race@example.com')->count());
+    }
+
     public function test_health_check_is_up(): void
     {
         $this->get('/up')->assertOk();

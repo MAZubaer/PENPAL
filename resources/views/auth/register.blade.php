@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register') }}" onsubmit="var b=this.querySelector('[type=submit]'); if (b.disabled) return false; b.disabled=true; b.textContent='Please wait…';">
                         @csrf
 
                         <div class="row mb-3">
